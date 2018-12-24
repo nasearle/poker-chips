@@ -23,8 +23,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function (req, res) {
-  res.render('home');
+app.get('/', (req, res) => {
+  res.render('create-table');
 });
 
 app.post('/create-table', (req, res) => {
@@ -39,6 +39,10 @@ app.post('/create-table', (req, res) => {
   res.render('table', { id: id, name: name, buyIn: buyIn });
 });
 
+app.get('/join-table', (req, res) => {
+  res.render('join-table');
+});
+
 app.post('/join-table', async (req, res) => {
   const id = req.body.id;
   console.log(id);
@@ -49,10 +53,10 @@ app.post('/join-table', async (req, res) => {
   let buyInVal;
   if (buyInRef.exists) {
     buyInVal = buyInRef.data().value;
-    console.log("Document data:", buyInVal);
+    console.log('Document data:', buyInVal);
   } else {
     // doc.data() will be undefined in this case
-    console.log("No such document!");
+    console.log('No such document!');
   }
   db.collection(id).doc(name).set({ value: buyInVal });
   res.render('table', { id: id, name: name, buyIn: buyInVal });
@@ -61,60 +65,20 @@ app.post('/join-table', async (req, res) => {
 io.on('connection', socket => {
   console.log('a user connected');
 
-  socket.on('signIn', async data => {
+  socket.on('joinTable', async data => {
     try {
-      await isValidPassword(data);
-      console.log('password is valid');
-
-      socket.emit('signInResponse', { success: true });
-      // if the player doesn't already have an existing session, create a new player
-      // (check prevents creating multiple ships when browser auto disconnects
-      // and reconnects socket)
-      if (!socket.handshake.session.ship_exists) {
-        // create a new player and add it to our players object
-        players[socket.id] = {
-          rotation: 0,
-          x: Math.floor(Math.random() * 700) + 50,
-          y: Math.floor(Math.random() * 500) + 50,
-          playerId: socket.id,
-          hp: PLAYERHP,
-          kills: 0
-        };
-        // send the players object to the new player
-        socket.emit('currentPlayers', players);
-        // send the star object to the new player
-        socket.emit('starLocation', star);
-        // send the current scores
-        // socket.emit('scoreUpdate', players[socket.id].kills);
-        // update all other players of the new player
-        socket.broadcast.emit('newPlayer', players[socket.id]);
-        socket.handshake.session.ship_exists = true;
-        socket.handshake.session.save();
-      }
-    } catch (err) {
-      socket.emit('signInResponse', {
-        success: false,
-        message: err.message,
+      const playerName = data.name;
+      const tableId = data.id;
+      socket.join(tableId, () => {
+        io.to(tableId).emit(`${playerName} has joined the table`);
       });
-    }
-  });
-
-  socket.on('signUp', async data => {
-    try {
-      await isUsernameAvailable(data);
-      await addUser(data);
-      socket.emit('signUpResponse', { success: true });
+      const tableRef = db.collection(tableId);
+      console.log(tableRef);
+      const players = {};
+      socket.emit('currentPlayers', players);
     } catch (err) {
-      socket.emit('signUpResponse', { success: false, message: err.message });
+      console.log('There was an error');
     }
-  });
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-    // remove this player from our players object
-    delete players[socket.id];
-    // emit a message to all players to remove this player
-    io.emit('disconnect', socket.id);
   });
 });
 

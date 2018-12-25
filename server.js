@@ -50,9 +50,7 @@ io.on('connection', socket => {
       let buyInVal;
       if (buyInRef.exists) {
         buyInVal = buyInRef.data().value;
-        console.log('Document data:', buyInVal);
       } else {
-        // doc.data() will be undefined in this case
         console.log('No such document!');
       }
       db.collection(tableId).doc(playerName).set({ value: buyInVal });

@@ -38,7 +38,6 @@ PokerChipz.prototype.replaceElement = function(parent, content) {
 PokerChipz.prototype.viewCreateTable = function() {
   const self = this;
   const createTableEl = this.renderTemplate('tempCreateTable');
-  this.replaceElement(document.querySelector('main'), createTableEl);
   const btnCreate = createTableEl.querySelector('#btnCreate');
   const btnJoinTemp = createTableEl.querySelector('#btnJoinTemp');
 
@@ -51,12 +50,13 @@ PokerChipz.prototype.viewCreateTable = function() {
   btnJoinTemp.onclick = () => {
     self.viewJoinTable();
   };
+
+  this.replaceElement(document.querySelector('main'), createTableEl);
 };
 
 PokerChipz.prototype.viewJoinTable = function() {
   const self = this;
   const joinTableEl = this.renderTemplate('tempJoinTable');
-  this.replaceElement(document.querySelector('main'), joinTableEl);
   const btnJoin = joinTableEl.querySelector('#btnJoin');
 
   btnJoin.onclick = () => {
@@ -64,18 +64,21 @@ PokerChipz.prototype.viewJoinTable = function() {
     const tableId = document.querySelector('#id').value;
     self.socket.emit('joinTable', { playerName: playerName, tableId: tableId });
   };
+
+  this.replaceElement(document.querySelector('main'), joinTableEl);
 };
 
 PokerChipz.prototype.viewTable = function(tableId, playerName, tableBuyIn) {
   const tableEl = this.renderTemplate('tempTable');
-  this.replaceElement(document.querySelector('main'), tableEl);
   tableEl.querySelector('#table-name').innerHTML = tableId;
+  tableEl.querySelector('#player-chips').innerHTML = `<div>Your chips: ${tableBuyIn}</div>`;
+  this.replaceElement(document.querySelector('main'), tableEl);
 };
 
 PokerChipz.prototype.viewTableNews = function(data) {
   const mainEl = document.querySelector('main');
   const tableEl = mainEl.querySelector('#tempTable');
-  tableEl.querySelector('#table-history').innerHTML = `> ${data}`;
+  tableEl.querySelector('#table-history').innerHTML += `<div>> ${data}</div>`;
 };
 
 window.onload = () => {

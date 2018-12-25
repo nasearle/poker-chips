@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Poker Chipz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="styles/main.css" />
+</head>
+<body>
+  <header>
+    <h2 class="header">Poker Chipz</h2>
+  </header>
+
+  <main></main>
+
+  <div hidden class="template" id="tempCreateTable">
+    <div id="formCreateTable">
+      <label for="nameCreate">Your Name</label>
+      <input id="nameCreate" type="text" name="name" autocomplete="name" />
+      <label for="buyIn">Table Buy-In</label>
+      <input id="buyIn" type="number" name="buyIn" value=1000 />
+      <button id="btnCreate">Create Table</button>
+      <p>Your friend already created a table? <button id="btnJoinTemp">Join an existing table</button></p>
+    </div>
+  </div>
+
+  <div hidden class="template" id="tempJoinTable">
+    <div id="formJoinTable">
+      <label for="nameJoin">Your Name</label>
+      <input id="nameJoin" type="text" name="name" autocomplete="name" />
+      <label for="id">Table Id</label>
+      <input id="id" type="text" name="id" />
+      <button id="btnJoin">Join Table</button>
+    </div>
+  </div>
+
+  <div hidden class="template" id="tempTable">
+    <h1 id="table-name"></h1>
+    <textarea class="table-history"></textarea>
+    <button>Bet</button>
+    <button>Take</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="scripts/main.js"></script>
+</body>
+</html>

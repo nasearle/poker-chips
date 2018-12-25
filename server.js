@@ -36,6 +36,9 @@ io.on('connection', socket => {
       socket.join(tableId);
       socket.emit('joinedTable', { tableId: tableId, playerName: playerName, tableBuyIn: tableBuyIn });
       io.to(tableId).emit('tableNews', `${playerName} has joined the table`);
+      const player = {};
+      player[playerName] = tableBuyIn;
+      socket.emit('currentPlayers', player);
     } catch (err) {
       console.log('There was an error');
     }
@@ -56,15 +59,20 @@ io.on('connection', socket => {
       db.collection(tableId).doc(playerName).set({ value: buyInVal });
       socket.join(tableId);
       socket.emit('joinedTable', { tableId: tableId, playerName: playerName, tableBuyIn: buyInVal });
+      socket.broadcast.to(tableId).emit('newPlayer', { playerName: playerName, value: buyInVal });
       io.to(tableId).emit('tableNews', `${playerName} has joined the table`);
-
-      // console.log(tableRef);
-      // const players = {};
-      // socket.emit('currentPlayers', players);
+      const players = {};
+      const blacklist = ['__buyIn'];
+      const playersSnapshot = await tableRef.get();
+      playersSnapshot.forEach(doc => {
+        if (blacklist.indexOf(doc.id) === -1) {
+          players[doc.id] = doc.data().value;
+        }
+      });
+      socket.emit('currentPlayers', players);
     } catch (err) {
       console.log('There was an error');
       console.log(err);
-
     }
   });
 });

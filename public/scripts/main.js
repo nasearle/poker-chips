@@ -5,13 +5,25 @@ function PokerChipz() {
   this.socket = io();
 
   this.socket.on('joinedTable', data => {
+    // data => { tableId: tableId, playerName: playerName, tableBuyIn: buyInVal }
     const tableId = data.tableId;
     const playerName = data.playerName;
     const tableBuyIn = data.tableBuyIn;
     self.viewTable(tableId, playerName, tableBuyIn);
   });
 
+  this.socket.on('newPlayer', data => {
+    // data => { playerName: playerName, value: buyInVal }
+    self.viewNewPlayer(data);
+  });
+
+  this.socket.on('currentPlayers', data => {
+    // data => { player1Name: 1000, player2Name: 1000, etc.}
+    self.viewPlayers(data);
+  });
+
   this.socket.on('tableNews', data => {
+    // data => message string
     self.viewTableNews(data);
   });
 }
@@ -79,6 +91,23 @@ PokerChipz.prototype.viewTableNews = function(data) {
   const mainEl = document.querySelector('main');
   const tableEl = mainEl.querySelector('#tempTable');
   tableEl.querySelector('#table-history').innerHTML += `<div>> ${data}</div>`;
+};
+
+PokerChipz.prototype.viewPlayers = function(data) {
+  const mainEl = document.querySelector('main');
+  const tableEl = mainEl.querySelector('#tempTable');
+  const players = Object.entries(data);
+  for (const [name, value] of players) {
+    tableEl.querySelector('#players').innerHTML += `<div id="name-${name}">${name}: ${value}</div>`;
+  }
+};
+
+PokerChipz.prototype.viewNewPlayer = function(data) {
+  const mainEl = document.querySelector('main');
+  const tableEl = mainEl.querySelector('#tempTable');
+  const name = data.playerName;
+  const value = data.value;
+  tableEl.querySelector('#players').innerHTML += `<div id="name-${name}">${name}: ${value}</div>`;
 };
 
 window.onload = () => {

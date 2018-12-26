@@ -26,6 +26,11 @@ function PokerChipz() {
     // data => message string
     self.viewTableNews(data);
   });
+
+  this.socket.on('updatePlayer', data => {
+    // data => { playerName: playerName, value: numPlayerVal }
+    self.viewUpdatePlayer(data);
+  });
 }
 
 PokerChipz.prototype.initTemplates = function() {
@@ -81,9 +86,24 @@ PokerChipz.prototype.viewJoinTable = function() {
 };
 
 PokerChipz.prototype.viewTable = function(tableId, playerName, tableBuyIn) {
+  self = this
   const tableEl = this.renderTemplate('tempTable');
   tableEl.querySelector('#table-name').innerHTML = tableId;
-  tableEl.querySelector('#player-chips').innerHTML = `<div>Your chips: ${tableBuyIn}</div>`;
+  tableEl.querySelector('#player-chips').innerHTML = `<div id="your-chips-${playerName}">Your chips: ${tableBuyIn}</div>`;
+  tableEl.querySelector('#input-bet-chips').max = tableBuyIn;
+  const btnBet = tableEl.querySelector('#btnBet');
+  const btnTake = tableEl.querySelector('#btnTake');
+
+  btnBet.onclick = () => {
+    const betVal = document.querySelector('#input-bet-chips').value;
+    self.socket.emit('placeBet', { tableId: tableId, playerName: playerName, betVal: betVal });
+  };
+
+  btnTake.onclick = () => {
+    const takeVal = document.querySelector('#input-take-chips').value;
+    self.socket.emit('takePot', { tableId: tableId, playerName: playerName, takeVal: takeVal });
+  };
+
   this.replaceElement(document.querySelector('main'), tableEl);
 };
 
@@ -98,7 +118,7 @@ PokerChipz.prototype.viewPlayers = function(data) {
   const tableEl = mainEl.querySelector('#tempTable');
   const players = Object.entries(data);
   for (const [name, value] of players) {
-    tableEl.querySelector('#players').innerHTML += `<div id="name-${name}">${name}: ${value}</div>`;
+    tableEl.querySelector('#players').innerHTML += `<div id="chips-${name}">${name}: ${value}</div>`;
   }
 };
 
@@ -107,7 +127,20 @@ PokerChipz.prototype.viewNewPlayer = function(data) {
   const tableEl = mainEl.querySelector('#tempTable');
   const name = data.playerName;
   const value = data.value;
-  tableEl.querySelector('#players').innerHTML += `<div id="name-${name}">${name}: ${value}</div>`;
+  tableEl.querySelector('#players').innerHTML += `<div id="chips-${name}">${name}: ${value}</div>`;
+};
+
+PokerChipz.prototype.viewUpdatePlayer = function(data) {
+  const mainEl = document.querySelector('main');
+  const tableEl = mainEl.querySelector('#tempTable');
+  const name = data.playerName;
+  const value = data.value;
+  const yourChips = tableEl.querySelector(`#your-chips-${name}`);
+  console.log(yourChips);
+  if (yourChips) {
+    yourChips.innerHTML = `Your chips: ${value}`;
+  }
+  tableEl.querySelector(`#chips-${name}`).innerHTML = `${name}: ${value}`;
 };
 
 window.onload = () => {

@@ -40,11 +40,13 @@
     <div id="table-history"></div>
     <div id="players"></div>
     <div id="player-chips"></div>
-    <button>Bet</button>
-    <button>Take</button>
+    <input id="input-bet-chips" type="number" max="0">
+    <input id="input-take-chips" type="number" max="0">
+    <button id="btnBet">Bet</button>
+    <button id="btnTake">Take</button>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script type="module" src="scripts/main.js"></script>
+  <script type="module" src="scripts/PokerChipz.js"></script>
 </body>
 </html>

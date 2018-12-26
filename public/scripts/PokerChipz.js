@@ -56,7 +56,7 @@ PokerChipz.prototype.viewCreateTable = function() {
   const self = this;
   const createTableEl = this.renderTemplate('tempCreateTable');
   const btnCreate = createTableEl.querySelector('#btnCreate');
-  const btnJoinTemp = createTableEl.querySelector('#btnJoinTemp');
+  const linkJoinTemp = createTableEl.querySelector('#linkJoinTemp');
 
   btnCreate.onclick = () => {
     const playerName = document.querySelector('#nameCreate').value;
@@ -64,7 +64,8 @@ PokerChipz.prototype.viewCreateTable = function() {
     self.socket.emit('createTable', { playerName: playerName, tableBuyIn: tableBuyIn });
   };
 
-  btnJoinTemp.onclick = () => {
+  linkJoinTemp.onclick = (event) => {
+    event.preventDefault();
     self.viewJoinTable();
   };
 

@@ -16,12 +16,14 @@
 
   <div hidden class="template" id="tempCreateTable">
     <div id="formCreateTable">
-      <label for="nameCreate">Your Name</label>
-      <input id="nameCreate" type="text" name="name" autocomplete="name" />
-      <label for="buyIn">Table Buy-In</label>
-      <input id="buyIn" type="number" name="buyIn" value=1000 />
+      <div id="inputsCreateTable">
+        <label for="nameCreate">Your Name</label>
+        <input id="nameCreate" type="text" name="name" autocomplete="name" />
+        <label for="buyIn">Table Buy-In</label>
+        <input id="buyIn" type="number" name="buyIn" value=1000 />
+      </div>
       <button id="btnCreate">Create Table</button>
-      <p>Your friend already created a table? <button id="btnJoinTemp">Join an existing table</button></p>
+      <p>Your friend already created a table? <a href="/join-table" id="linkJoinTemp">Join an existing table</a></p>
     </div>
   </div>
 

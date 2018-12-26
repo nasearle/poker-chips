@@ -90,7 +90,6 @@ PokerChipz.prototype.viewTable = function(tableId, playerName, tableBuyIn) {
   const tableEl = this.renderTemplate('tempTable');
   tableEl.querySelector('#table-name').innerHTML = tableId;
   tableEl.querySelector('#player-chips').innerHTML = `<div id="your-chips-${playerName}">Your chips: ${tableBuyIn}</div>`;
-  tableEl.querySelector('#input-bet-chips').max = tableBuyIn;
   const btnBet = tableEl.querySelector('#btnBet');
   const btnTake = tableEl.querySelector('#btnTake');
 
@@ -136,7 +135,6 @@ PokerChipz.prototype.viewUpdatePlayer = function(data) {
   const name = data.playerName;
   const value = data.value;
   const yourChips = tableEl.querySelector(`#your-chips-${name}`);
-  console.log(yourChips);
   if (yourChips) {
     yourChips.innerHTML = `Your chips: ${value}`;
   }

@@ -88,18 +88,18 @@ PokerChipz.prototype.viewJoinTable = function() {
 PokerChipz.prototype.viewTable = function(tableId, playerName, tableBuyIn) {
   self = this
   const tableEl = this.renderTemplate('tempTable');
-  tableEl.querySelector('#table-name').innerHTML = tableId;
-  tableEl.querySelector('#player-chips').innerHTML = `<div id="your-chips-${playerName}">Your chips: ${tableBuyIn}</div>`;
+  tableEl.querySelector('#tableName').innerHTML = tableId;
+  tableEl.querySelector('#playerChips').innerHTML = `<div id="your-chips-${playerName}">Your chips: ${tableBuyIn}</div>`;
   const btnBet = tableEl.querySelector('#btnBet');
   const btnTake = tableEl.querySelector('#btnTake');
 
   btnBet.onclick = () => {
-    const betVal = document.querySelector('#input-bet-chips').value;
+    const betVal = document.querySelector('#inputBetChips').value;
     self.socket.emit('placeBet', { tableId: tableId, playerName: playerName, betVal: betVal });
   };
 
   btnTake.onclick = () => {
-    const takeVal = document.querySelector('#input-take-chips').value;
+    const takeVal = document.querySelector('#inputTakeChips').value;
     self.socket.emit('takePot', { tableId: tableId, playerName: playerName, takeVal: takeVal });
   };
 
@@ -109,7 +109,7 @@ PokerChipz.prototype.viewTable = function(tableId, playerName, tableBuyIn) {
 PokerChipz.prototype.viewTableNews = function(data) {
   const mainEl = document.querySelector('main');
   const tableEl = mainEl.querySelector('#tempTable');
-  tableEl.querySelector('#table-history').innerHTML += `<div>> ${data}</div>`;
+  tableEl.querySelector('#tableHistory').innerHTML += `<div>> ${data}</div>`;
 };
 
 PokerChipz.prototype.viewPlayers = function(data) {

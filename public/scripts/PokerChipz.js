@@ -94,6 +94,11 @@ PokerChipz.prototype.viewTable = function(tableId, playerName, tableBuyIn) {
   const btnBet = tableEl.querySelector('#btnBet');
   const btnTake = tableEl.querySelector('#btnTake');
 
+  const tabs = tableEl.querySelectorAll('.tabs');
+  for (let i = 0; i < tabs.length; i++) {
+    M.Tabs.init(tabs[i]);
+  }
+
   btnBet.onclick = () => {
     const betVal = document.querySelector('#inputBetChips').value;
     self.socket.emit('placeBet', { tableId: tableId, playerName: playerName, betVal: betVal });

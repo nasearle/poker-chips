@@ -5,47 +5,87 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Poker Chipz</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" media="screen" href="styles/main.css" />
+  <!-- <link rel="stylesheet" type="text/css" media="screen" href="styles/main.css" /> -->
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
 <body>
-  <header>
-    <h2 class="header">Poker Chipz</h2>
-  </header>
+  <nav>
+    <div class="nav-wrapper teal darken-1">
+      <a href="/" class="brand-logo">Poker Chipz</a>
+    </div>
+  </nav>
 
   <main></main>
 
-  <div hidden class="template" id="tempCreateTable">
-    <div id="formCreateTable">
-      <div id="inputsCreateTable">
-        <label for="nameCreate">Your Name</label>
-        <input id="nameCreate" type="text" name="name" autocomplete="name" />
-        <label for="buyIn">Table Buy-In</label>
-        <input id="buyIn" type="number" name="buyIn" value=1000 />
+  <div hidden class="template container" id="tempCreateTable">
+    <div class="row">
+      <div class="col s12 m8 offset-m2 l6 offset-l3">
+        <div id="formCreateTable">
+          <div id="inputsCreateTable">
+            <label for="nameCreate">Your Name</label>
+            <input id="nameCreate" type="text" name="name" autocomplete="name" placeholder="Enter your name"/>
+            <label for="buyIn">Table Buy-In</label>
+            <input id="buyIn" type="number" name="buyIn" value=1000 />
+          </div>
+          <div class="row center">
+            <button id="btnCreate" class="waves-effect btn-large">Create Table</button>
+            <p>Your friend already created a table? <a href="/join-table" id="linkJoinTemp">Join an existing table</a></p>
+          </div>
+        </div>
       </div>
-      <button id="btnCreate">Create Table</button>
-      <p>Your friend already created a table? <a href="/join-table" id="linkJoinTemp">Join an existing table</a></p>
     </div>
   </div>
 
-  <div hidden class="template" id="tempJoinTable">
+  <div hidden class="template container" id="tempJoinTable">
     <div id="formJoinTable">
       <label for="nameJoin">Your Name</label>
       <input id="nameJoin" type="text" name="name" autocomplete="name" />
       <label for="id">Table Id</label>
       <input id="id" type="text" name="id" />
-      <button id="btnJoin">Join Table</button>
+      <button id="btnJoin" class="waves-effect btn">Join Table</button>
     </div>
   </div>
 
-  <div hidden class="template" id="tempTable">
-    <h1 id="tableName"></h1>
-    <div id="tableHistory"></div>
-    <div id="players"></div>
-    <div id="playerChips"></div>
-    <input id="inputBetChips" type="number">
-    <input id="inputTakeChips" type="number">
-    <button id="btnBet">Bet</button>
-    <button id="btnTake">Take</button>
+  <div hidden class="template container" id="tempTable">
+    <div class="row">
+      <div class="col s12 m10 offset-m1 l6 offset-l3">
+        <div class="card">
+          <h3 id="tableName"></h3>
+          <div class="card-tabs">
+            <ul class="tabs tabs-fixed-width">
+              <li class="tab col s6"><a class="active" href="#table">Table</a></li>
+              <li class="tab col s6"><a href="#players">Players</a></li>
+            </ul>
+          </div>
+          <div id="table">
+            <div id="tableHistory" class="col s12"></div>
+            <div id="playerChips" class="col s12"></div>
+          </div>
+          <div id="players" class="col s12"></div>
+          <div class="card-tabs">
+            <ul class="tabs tabs-fixed-width">
+              <li class="tab col s6"><a class="active" href="#bet">Bet</a></li>
+              <li class="tab col s6"><a href="#take">Take</a></li>
+            </ul>
+          </div>
+          <div id="bet">
+            <p class="range-field">
+              <input id="inputBetChips" type="range" min="1" max="1000" value="10">
+            </p>
+            <button id="btnBet" class="waves-effect btn">Bet</button>
+          </div>
+          <div id="take">
+            <p class="range-field">
+              <input id="inputTakeChips" type="range" min="1" max="1000" value="10">
+            </p>
+            <button id="btnTake" class="waves-effect btn">Take</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>

@@ -2,3 +2,4 @@
 node_modules
 poker-chipz-37b2839404fd.json
 .vscode
+delete-data-firestore.js

@@ -40,12 +40,11 @@ PokerChipz.prototype.initTemplates = function() {
   });
 };
 
-PokerChipz.prototype.renderTemplate = function(id) {
-  const template = this.templates[id];
-  const el = template.cloneNode(true);
-  el.removeAttribute('hidden');
-  return el;
-};
+PokerChipz.prototype.hideTemplates = function() {
+  document.querySelectorAll('.template').forEach(el => {
+    el.classList.add('hide');
+  });
+}
 
 PokerChipz.prototype.replaceElement = function(parent, content) {
   parent.innerHTML = '';
@@ -54,7 +53,8 @@ PokerChipz.prototype.replaceElement = function(parent, content) {
 
 PokerChipz.prototype.viewCreateTable = function() {
   const self = this;
-  const createTableEl = this.renderTemplate('tempCreateTable');
+  this.hideTemplates();
+  const createTableEl = document.querySelector('#tempCreateTable');
   const btnCreate = createTableEl.querySelector('#btnCreate');
   const linkJoinTemp = createTableEl.querySelector('#linkJoinTemp');
 
@@ -69,12 +69,13 @@ PokerChipz.prototype.viewCreateTable = function() {
     self.viewJoinTable();
   };
 
-  this.replaceElement(document.querySelector('main'), createTableEl);
+  createTableEl.classList.remove('hide');
 };
 
 PokerChipz.prototype.viewJoinTable = function() {
   const self = this;
-  const joinTableEl = this.renderTemplate('tempJoinTable');
+  this.hideTemplates();
+  const joinTableEl = document.querySelector('#tempJoinTable');
   const btnJoin = joinTableEl.querySelector('#btnJoin');
 
   btnJoin.onclick = () => {
@@ -83,20 +84,39 @@ PokerChipz.prototype.viewJoinTable = function() {
     self.socket.emit('joinTable', { playerName: playerName, tableId: tableId });
   };
 
-  this.replaceElement(document.querySelector('main'), joinTableEl);
+  joinTableEl.classList.remove('hide');
 };
 
 PokerChipz.prototype.viewTable = function(tableId, playerName, tableBuyIn) {
   self = this
-  const tableEl = this.renderTemplate('tempTable');
+  this.hideTemplates();
+  const tableEl = document.querySelector('#tempTable');
   tableEl.querySelector('#tableName').innerHTML = tableId;
   tableEl.querySelector('#playerChips').innerHTML = `<div id="your-chips-${playerName}">Your chips: ${tableBuyIn}</div>`;
   const btnBet = tableEl.querySelector('#btnBet');
   const btnTake = tableEl.querySelector('#btnTake');
+  const sliderBet = tableEl.querySelector('#inputBetChips');
+  const sliderTake = tableEl.querySelector('#inputTakeChips');
 
   const tabs = tableEl.querySelectorAll('.tabs');
   for (let i = 0; i < tabs.length; i++) {
     M.Tabs.init(tabs[i]);
+  }
+
+  sliderBet.oninput = () => {
+    console.log('bet slider change');
+
+    const betVal = document.querySelector('#inputBetChips').value;
+    console.log(btnBet);
+
+    btnBet.innerHTML = `Bet ${betVal}`;
+    console.log(btnBet.innerHtml);
+
+  }
+
+  sliderTake.oninput = () => {
+    const takeVal = document.querySelector('#inputBetChips').value;
+    btnTake.innerHTML = `Take ${takeVal}`;
   }
 
   btnBet.onclick = () => {
@@ -109,18 +129,16 @@ PokerChipz.prototype.viewTable = function(tableId, playerName, tableBuyIn) {
     self.socket.emit('takePot', { tableId: tableId, playerName: playerName, takeVal: takeVal });
   };
 
-  this.replaceElement(document.querySelector('main'), tableEl);
+  tableEl.classList.remove('hide');
 };
 
 PokerChipz.prototype.viewTableNews = function(data) {
-  const mainEl = document.querySelector('main');
-  const tableEl = mainEl.querySelector('#tempTable');
+  const tableEl = document.querySelector('#tempTable');
   tableEl.querySelector('#tableHistory').innerHTML += `<div>> ${data}</div>`;
 };
 
 PokerChipz.prototype.viewPlayers = function(data) {
-  const mainEl = document.querySelector('main');
-  const tableEl = mainEl.querySelector('#tempTable');
+  const tableEl = document.querySelector('#tempTable');
   const players = Object.entries(data);
   for (const [name, value] of players) {
     tableEl.querySelector('#players').innerHTML += `<div id="chips-${name}">${name}: ${value}</div>`;
@@ -128,16 +146,14 @@ PokerChipz.prototype.viewPlayers = function(data) {
 };
 
 PokerChipz.prototype.viewNewPlayer = function(data) {
-  const mainEl = document.querySelector('main');
-  const tableEl = mainEl.querySelector('#tempTable');
+  const tableEl = document.querySelector('#tempTable');
   const name = data.playerName;
   const value = data.value;
   tableEl.querySelector('#players').innerHTML += `<div id="chips-${name}">${name}: ${value}</div>`;
 };
 
 PokerChipz.prototype.viewUpdatePlayer = function(data) {
-  const mainEl = document.querySelector('main');
-  const tableEl = mainEl.querySelector('#tempTable');
+  const tableEl = document.querySelector('#tempTable');
   const name = data.playerName;
   const value = data.value;
   const yourChips = tableEl.querySelector(`#your-chips-${name}`);
